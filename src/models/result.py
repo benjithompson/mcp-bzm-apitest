@@ -19,11 +19,11 @@ class AssertionResult(BaseModel):
     """Assertion execution result."""
 
     result: str = Field(description="Assertion result")
-    source: str = Field(description="Assertion source")
+    source: Optional[str] = Field(default=None, description="Assertion source")
     property: Optional[str] = Field(default=None, description="Property being asserted")
-    comparison: str = Field(description="Comparison type")
-    target_value: Any = Field(description="Expected value")
-    actual_value: Any = Field(description="Actual value")
+    comparison: Optional[str] = Field(default=None, description="Comparison type")
+    target_value: Optional[Any] = Field(default=None, description="Expected value")
+    actual_value: Optional[Any] = Field(default=None, description="Actual value")
     error: Optional[str] = Field(default=None, description="Assertion error")
 
 
