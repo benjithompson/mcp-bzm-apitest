@@ -37,6 +37,7 @@ class ResultManager:
             self.token,
             "GET",
             f"{RESULTS_ENDPOINT.format(bucket_key, test_id)}/{test_run_id}",
+            params={"subtests": "true"},
             result_formatter=format_results,
         )
 

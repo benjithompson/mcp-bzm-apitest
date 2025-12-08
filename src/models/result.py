@@ -2,7 +2,7 @@
 Test Result model for BlazeMeter API Monitoring
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from pydantic import BaseModel, Field
 
@@ -48,18 +48,23 @@ class SubtestRequestResult(BaseModel):
 class SubtestDetail(BaseModel):
     """Subtest execution details."""
 
-    name: str = Field(description="Subtest name")
+    name: Optional[str] = Field(default=None, description="Subtest name")
     note: Optional[str] = Field(default=None, description="Subtest description")
-    result: str = Field(description="Subtest result")
-    test_id: str = Field(
+    result: Optional[str] = Field(default=None, description="Subtest result")
+    test_id: Optional[str] = Field(
         alias="test_uuid",
+        defaul=None,
         description="Id of the parent test which is actually executed by the subtest step",
     )
-    test_run_id: str = Field(alias="test_run_uuid", description="Id of the subtest run")
-    test_run_url: str = Field(description="Subtest run URL")
-    started_at: str = Field(description="Subtest start timestamp")
-    finished_at: str = Field(description="Subtest finish timestamp")
-    requests: List[SubtestRequestResult] = Field(description="Subtest request results")
+    test_run_id: Optional[str] = Field(
+        alias="test_run_uuid", default=None, description="Id of the subtest run"
+    )
+    test_run_url: Optional[str] = Field(default=None, description="Subtest run URL")
+    started_at: Optional[str] = Field(default=None, description="Subtest start timestamp")
+    finished_at: Optional[str] = Field(default=None, description="Subtest finish timestamp")
+    requests: Optional[List[SubtestRequestResult]] = Field(
+        default=None, description="Subtest request results"
+    )
 
 
 class RequestResult(BaseModel):
@@ -153,7 +158,7 @@ class TestResult(BaseModel):
     agent_expired: Optional[bool] = Field(
         default=None, description="Whether agent(private location) expired"
     )
-    subtest_detail: Optional[List[SubtestDetail]] = Field(
+    subtest_detail: Optional[Union[List[Any], Dict[str, Any], SubtestDetail]] = Field(
         default=None, description="Detailed subtest results"
     )
 
