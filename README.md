@@ -32,7 +32,7 @@ This gives AI agents, assistants, and chatbots the ability to read and manage te
 - Create a new test step (Pause or Request) to modify or extend test workflows.
 
 > [!NOTE]
-> **For detailed documentation including use cases, available tools, integration points, and troubleshooting, see the [BlazeMeter API Test MCP Server documentation](https://help.blazemeter.com/docs/guide/integrations-blazemeter-mcp-server.html).**
+> **For detailed documentation including use cases, available tools, integration points, and troubleshooting, see the [BlazeMeter API Test MCP Server documentation](https://help.blazemeter.com/docs/guide/integrations-api-monitoring-mcp-server.html).**
 
 ---
 
@@ -206,7 +206,7 @@ This project is licensed under the Apache License, Version 2.0. Please refer to 
 
 ## Support
 
-- **MCP Server Documentation**: [BlazeMeter API Test MCP Server Guide](https://help.blazemeter.com/docs/guide/integrations-blazemeter-mcp-server.html)
+- **MCP Server Documentation**: [BlazeMeter API Test MCP Server Guide](https://help.blazemeter.com/docs/guide/integrations-api-monitoring-mcp-server.html)
 - **API Documentation**: [BlazeMeter API Test API Documentation](https://help.blazemeter.com/apidocs/api-monitoring/index.htm?tocpath=API%20Monitoring%7C_____1)
 - **Issues**: [GitHub Issues](https://github.com/Runscope/mcp-bzm-apitest/issues)
 - **Support**: Contact BlazeMeter support for enterprise assistance
