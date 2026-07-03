@@ -20,8 +20,6 @@ jobs:
         include:
           - os: ubuntu-latest
             asset: mcp-bzm-apitest-linux-amd64
-          - os: macos-13
-            asset: mcp-bzm-apitest-macos-amd64
           - os: macos-latest
             asset: mcp-bzm-apitest-macos-arm64
           - os: windows-latest
