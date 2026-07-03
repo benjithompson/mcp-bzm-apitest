@@ -88,7 +88,7 @@ class StepManager:
                     request_step_body["body"] = safe_json
                 except json.JSONDecodeError as e:
                     return BaseResult(error=f"Invalid JSON content provided for body_content: {str(e)}")
-                request_headers["Content-Type"] = "application/json"
+                request_headers["Content-Type"] = ["application/json"]
 
             case "xml":
                 try:
@@ -101,7 +101,7 @@ class StepManager:
                     return BaseResult(error=f"Invalid XML content provided for body_content: {str(e)}")
                 except Exception as e:
                     return BaseResult(error=f"Error processing XML content: {str(e)}")
-                request_headers["Content-Type"] = "application/xml"
+                request_headers["Content-Type"] = ["application/xml"]
 
             case "html":
                 try:
@@ -110,7 +110,7 @@ class StepManager:
                     request_step_body["body"] = safe_html
                 except Exception as e:
                     return BaseResult(error=f"Error processing HTML content: {str(e)}")
-                request_headers["Content-Type"] = "text/html"
+                request_headers["Content-Type"] = ["text/html"]
 
             case "text":
                 # Remove any null bytes and control characters except newlines/tabs
@@ -121,7 +121,7 @@ class StepManager:
                     request_step_body["body"] = safe_text
                 except Exception as e:
                     return BaseResult(error=f"Error processing text content: {str(e)}")
-                request_headers["Content-Type"] = "text/plain"
+                request_headers["Content-Type"] = ["text/plain"]
             case _:
                 return BaseResult(
                     error=f"Unsupported body_type {body_type}. Supported types are: json, xml, html, text"

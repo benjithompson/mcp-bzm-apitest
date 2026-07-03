@@ -120,6 +120,9 @@ class TestStepManager:
             )
 
             assert result.error is None
+            # Header values must be arrays per the REST API contract
+            put_payload = mock_api.call_args.kwargs["json"]
+            assert put_payload["headers"]["Content-Type"] == ["application/json"]
 
     async def test_add_body_to_step_xml(self, mock_token, mock_context):
         """Test adding XML body to step"""
