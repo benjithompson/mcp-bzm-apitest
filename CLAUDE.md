@@ -55,6 +55,22 @@ main.py → FastMCP server → server.py:register_tools() → 8 Tool Managers
 
 **Token resolution order:** `BZM_API_TEST_TOKEN` env var → `BZM_API_TEST_TOKEN_FILE` path → local `bzm_api_test_token.env` file.
 
+## Tool Manager Pattern (follow when adding tools/actions)
+
+Each domain exposes exactly **one** MCP tool (`{TOOLS_PREFIX}_<domain>`, prefix `blazemeter_apitest` from `config/defaults.py`) taking `(action: str, args: Dict[str, Any], ctx: Context)`. Adding a capability = adding an **action**, not a new tool. The pattern (see `src/tools/step_manager.py` as reference):
+
+1. **Manager class** — one async method per action, holds `token` + `ctx`, calls `api_request()` with endpoints from `config/defaults.py`.
+2. **`register(mcp, token)` function** — a single `@mcp.tool()` handler whose **docstring is the LLM-facing contract**: every action, arg, allowed value, and example must be documented there or the model can't use it. New actions require updating this docstring.
+3. **Dispatch** — `match action:` inside the handler; each arm wraps the manager call in `check_result_error(span, ...)`. Required args use `args["x"]` (KeyError → generic error), optional args use `args.get("x")`.
+4. **Telemetry** — every handler wraps dispatch in `async with tool_span(...)` with trace context extracted from MCP `_meta` (`get_meta_from_ctx` → `extract_trace_context`). Catch order: `httpx.TimeoutException` → `httpx.HTTPStatusError` (→ `http_error_message`) → `Exception` (→ `UNEXPECTED_ERROR_MESSAGE`), each calling `record_span_error`.
+5. **Errors as values** — tools never raise to the client; validation failures return `BaseResult(error="...")`.
+
+**Step mutation pattern (read-modify-PUT):** existing step mutations (`add_body_to_step`, `add_assertion_to_step`) GET the raw step with `result_formatter=None`, verify `step_type == "request"`, mutate the dict, then PUT the **whole step** back. Follow this for any new step-level field (headers, variables, scripts, auth...).
+
+**Input sanitization:** user-supplied content is validated/sanitized before sending — JSON round-tripped via `json.loads/dumps`, XML via `defusedxml` (XXE), HTML via `nh3` (XSS), text stripped of control chars.
+
+**Read model is wider than the write surface:** `src/models/step.py` already represents headers, variables, scripts, before_scripts, auth, form, conditional/subtest fields — the REST API supports them; only write actions are missing.
+
 ## Code Style
 
 - **Line length:** 108 characters (black, flake8, isort all aligned)
