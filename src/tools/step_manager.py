@@ -156,7 +156,9 @@ class StepManager:
     ) -> BaseResult:
         request_result = await self.read(bucket_key, test_id, step_id, result_formatter=None)
         if not request_result or request_result.get("step_type") != "request":
-            return BaseResult(error=f"Step {step_id} is not a request step and cannot have a body added.")
+            return BaseResult(
+                error=f"Step {step_id} is not a request step and cannot have an assertion added."
+            )
         if "assertions" not in request_result or not isinstance(request_result["assertions"], list):
             request_result["assertions"] = []
         new_assertion = {"source": assertion_source, "comparison": assertion_comparison}

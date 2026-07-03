@@ -230,3 +230,27 @@ class TestStepManager:
 
             assert result.error is None
 
+    async def test_add_assertion_to_non_request_step(self, mock_token, mock_context):
+        """Test adding assertion to a non-request step returns error"""
+        manager = StepManager(mock_token, mock_context)
+
+        with patch.object(manager, 'read') as mock_read:
+            mock_read.return_value = {
+                "id": "step_123",
+                "step_type": "pause",
+                "duration": 5
+            }
+
+            result = await manager.add_assertion_to_step(
+                "bucket_abc",
+                "test_123",
+                "step_123",
+                "response_status",
+                "equals",
+                None,
+                "200"
+            )
+
+            assert result.error is not None
+            assert "cannot have an assertion added" in result.error
+
