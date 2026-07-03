@@ -6,6 +6,10 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to tag as semver + latest (e.g. 1.4.0). Leave empty for a plain branch build.'
+        required: false
 
 env:
   # GitHub Container Registry (default)
@@ -58,10 +62,10 @@ jobs:
         tags: |
           type=ref,event=branch
           type=ref,event=pr
-          type=semver,pattern={{version}},enable=${{ github.event_name == 'release' }}
-          type=semver,pattern={{major}}.{{minor}},enable=${{ github.event_name == 'release' }}
-          type=semver,pattern={{major}},enable=${{ github.event_name == 'release' }}
-          type=raw,value=latest,enable=${{ github.event_name == 'release' }}
+          type=semver,pattern={{version}},value=${{ inputs.version }},enable=${{ github.event_name == 'release' || inputs.version != '' }}
+          type=semver,pattern={{major}}.{{minor}},value=${{ inputs.version }},enable=${{ github.event_name == 'release' || inputs.version != '' }}
+          type=semver,pattern={{major}},value=${{ inputs.version }},enable=${{ github.event_name == 'release' || inputs.version != '' }}
+          type=raw,value=latest,enable=${{ github.event_name == 'release' || inputs.version != '' }}
 
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
