@@ -182,6 +182,23 @@ class TestStepManager:
         assert result.error is not None
         assert "Invalid XML" in result.error
 
+    async def test_add_body_to_step_unsupported_type(self, mock_token, mock_context):
+        """Test adding body with unsupported body_type returns error without calling the API"""
+        manager = StepManager(mock_token, mock_context)
+
+        with patch("src.tools.step_manager.api_request") as mock_api:
+            result = await manager.add_body_to_step(
+                "bucket_abc",
+                "test_123",
+                "step_123",
+                "yaml",
+                "key: value"
+            )
+
+            assert result.error is not None
+            assert "Unsupported body_type" in result.error
+            mock_api.assert_not_called()
+
     async def test_add_assertion_to_step(self, mock_token, mock_context):
         """Test adding assertion to step"""
         manager = StepManager(mock_token, mock_context)

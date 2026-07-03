@@ -123,7 +123,7 @@ class StepManager:
                     return BaseResult(error=f"Error processing text content: {str(e)}")
                 request_headers["Content-Type"] = "text/plain"
             case _:
-                BaseResult(
+                return BaseResult(
                     error=f"Unsupported body_type {body_type}. Supported types are: json, xml, html, text"
                 )
 
